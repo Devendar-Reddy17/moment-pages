@@ -55,4 +55,23 @@ public class AIController {
         AIThemeResponse response = aiProvider.generateTheme(request);
         return ResponseEntity.ok(response);
     }
+
+    public record GeneratePageRequestDTO(
+            String projectId,
+            @NotBlank String prompt
+    ) {}
+
+    @PostMapping("/generate-page")
+    public ResponseEntity<AIPageResponse> generatePage(
+            @RequestHeader(value = "X-Management-Token", required = false) String token,
+            @Valid @RequestBody GeneratePageRequestDTO dto) {
+        // If projectId is provided, validate the token
+        if (dto.projectId() != null && !dto.projectId().isBlank()) {
+            projectService.validateManagementToken(UUID.fromString(dto.projectId()), token);
+        }
+
+        AIPageRequest request = new AIPageRequest(dto.prompt());
+        AIPageResponse response = aiProvider.generatePage(request);
+        return ResponseEntity.ok(response);
+    }
 }

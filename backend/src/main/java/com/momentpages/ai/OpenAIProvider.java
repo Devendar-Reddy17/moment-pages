@@ -78,6 +78,34 @@ public class OpenAIProvider implements AIProvider {
         }
     }
 
+    @Override
+    public AIPageResponse generatePage(AIPageRequest request) {
+        String prompt = loadPromptTemplate("prompts/generate-page.txt")
+                .replace("{{prompt}}", request.prompt());
+
+        String response = callOpenAI(prompt);
+
+        try {
+            return objectMapper.readValue(response, AIPageResponse.class);
+        } catch (Exception e) {
+            log.error("Failed to parse AI page response", e);
+            // Return a sensible fallback
+            return new AIPageResponse(
+                    new AIPageResponse.Canvas(1080, 1920, "#fdf2f8"),
+                    List.of(
+                            Map.of("type", "text", "x", 140, "y", 200, "width", 800, "height", 120,
+                                    "content", Map.of("html", "<p style='font-size:48px;color:#1f2937'>Your Invitation</p>",
+                                            "plainText", "Your Invitation", "fontFamily", "Inter",
+                                            "fontSize", 48, "color", "#1f2937", "textAlign", "center")),
+                            Map.of("type", "text", "x", 140, "y", 400, "width", 800, "height", 80,
+                                    "content", Map.of("html", "<p style='font-size:20px;color:#4b5563'>We'd love for you to join us!</p>",
+                                            "plainText", "We'd love for you to join us!", "fontFamily", "Inter",
+                                            "fontSize", 20, "color", "#4b5563", "textAlign", "center"))
+                    )
+            );
+        }
+    }
+
     private String callOpenAI(String prompt) {
         Map<String, Object> requestBody = Map.of(
                 "model", model,

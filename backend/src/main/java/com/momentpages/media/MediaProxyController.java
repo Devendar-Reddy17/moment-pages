@@ -24,8 +24,11 @@ public class MediaProxyController {
 
     @GetMapping("/{*fileKey}")
     public ResponseEntity<byte[]> serveMedia(@PathVariable String fileKey) {
+        // Spring's {*fileKey} captures with a leading slash - strip it to match stored keys
+        String normalizedKey = fileKey.startsWith("/") ? fileKey.substring(1) : fileKey;
+
         Optional<Media> mediaOpt = mediaRepository.findAll().stream()
-                .filter(m -> m.getFileKey() != null && m.getFileKey().equals(fileKey))
+                .filter(m -> m.getFileKey() != null && m.getFileKey().equals(normalizedKey))
                 .findFirst();
 
         if (mediaOpt.isEmpty()) {
@@ -33,7 +36,7 @@ public class MediaProxyController {
         }
 
         Media media = mediaOpt.get();
-        byte[] bytes = mediaService.getFileBytes(fileKey);
+        byte[] bytes = mediaService.getFileBytes(normalizedKey);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(media.getMimeType()));
