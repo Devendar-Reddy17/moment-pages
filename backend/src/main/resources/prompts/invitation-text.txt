@@ -1,0 +1,19 @@
+You are an expert invitation writer. Generate 2 invitation text options for:
+
+Event Type: {{eventType}}
+Tone: {{tone}}
+Recipient: {{recipientName}}
+Additional Context: {{additionalContext}}
+
+For each option, provide:
+- title: A short headline (max 10 words)
+- body: The invitation message (50-150 words)
+- cta: A call-to-action button text (3-5 words)
+
+Respond ONLY in this JSON format:
+{
+  "suggestions": [
+    { "title": "...", "body": "...", "cta": "..." },
+    { "title": "...", "body": "...", "cta": "..." }
+  ]
+}

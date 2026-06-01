@@ -1,0 +1,36 @@
+# Dev profile — local development overrides
+# Active via: SPRING_PROFILES_ACTIVE=dev
+#
+# This file hardcodes local defaults so you don't need env vars.
+# Sensitive keys (Stripe, R2, OpenAI) are left empty — features degrade gracefully.
+
+spring:
+  datasource:
+    url: jdbc:postgresql://ep-wandering-art-abk8ff5c.eu-west-2.aws.neon.tech/neondb?sslmode=require
+    username: neondb_owner
+    password: npg_WUDH3BbgRkz6
+    hikari:
+      maximum-pool-size: 20
+      max-lifetime: 300000
+      idle-timeout: 180000
+      connection-test-query: SELECT 1
+
+app:
+  frontend-url: http://localhost:3000
+  backend-url: http://localhost:8089
+  cors:
+    allowed-origins: "http://localhost:3000"
+
+stripe:
+  secret-key: ""
+  webhook-secret: ""
+
+r2:
+  account-id: 3122283e30023a97d4c3d583c4be2f10
+  access-key-id: 9941cf06fc4711845fc3a95bce489600
+  secret-access-key: 76981e5a07c1283949a1cffd9571b46073b92265682e9773067d6fd5556a4680
+  bucket-name: momentpages-media
+  public-url: https://momentpages-media.3122283e30023a97d4c3d583c4be2f10.r2.cloudflarestorage.com
+
+openai:
+  api-key: ""
