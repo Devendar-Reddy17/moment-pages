@@ -41,7 +41,9 @@ Element definition format:
 Content formats:
 - For type "text": { "html": "<p style='font-size:Xpx;color:#hex'>text</p>", "plainText": "text", "fontFamily": "Inter", "fontSize": number, "color": "#hex", "textAlign": "center|left|right" }
 - For type "shape": { "shapeType": "rectangle|circle", "fill": "#hex", "stroke": "#hex", "strokeWidth": number, "borderRadius": number }
-- For type "form-element" with buttons: { "fieldType": "button-group", "label": "question text", "options": ["Yes", "No"], "required": false }
+- For type "form-element" with buttons: { "fieldType": "button-group", "label": "question text", "options": ["Yes", "No"], "required": false, "navigation": { "Yes": 1, "No": -1 } }
+  - navigation maps option values to target page index (0-based). Use -1 to stay on current page.
+  - If user mentions "on clicking X go to next page" or "link button to page Y", set navigation for that option to the target page index.
 - For type "form-element" with text input: { "fieldType": "text-input", "label": "label text", "placeholder": "placeholder", "required": false }
 - For type "form-element" with date picker: { "fieldType": "date-picker", "label": "label text", "required": false }
 - For type "form-element" with textarea: { "fieldType": "textarea", "label": "label text", "placeholder": "placeholder", "required": false }
@@ -54,6 +56,7 @@ Rules:
 5. Page indices are 0-based (first page = 0, second page = 1, etc.).
 6. Return multiple operations if needed to complete the request.
 7. If the request is unclear, make a reasonable interpretation based on context.
-8. The user can ask for anything - interpret their request flexibly and use the appropriate operation types.
+8. CRITICAL: If the user mentions linking a button to a page (e.g., "link Yes button to page 2", "on clicking No go to next page"), you MUST include a "navigation" field in the button-group element when modifying it. The navigation maps option values to page indices (0-based). For example: "navigation": { "Yes": 1, "No": -1 } means clicking Yes goes to page 2 (index 1), clicking No stays on current page. Use -1 to stay on the same page.
+9. The user can ask for anything - interpret their request flexibly and use the appropriate operation types.
 
 Generate the edit operations based on the user's request.
