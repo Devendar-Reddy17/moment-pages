@@ -140,6 +140,10 @@ public class MediaService {
         return mediaRepository.findByProjectIdOrderByUploadedAtDesc(projectId);
     }
 
+    public List<Media> listSharedBackgrounds() {
+        return mediaRepository.findByFileKeyStartingWithOrderByUploadedAtDesc("ai-generated/shared/");
+    }
+
     public void deleteMedia(UUID projectId, UUID mediaId) {
         Media media = mediaRepository.findById(mediaId)
                 .orElseThrow(() -> new BadRequestException("Media not found"));

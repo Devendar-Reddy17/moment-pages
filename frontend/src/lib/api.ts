@@ -297,6 +297,10 @@ class ApiClient {
     );
   }
 
+  async getBackgrounds(): Promise<Array<{ id: string; fileName: string; publicUrl: string }>> {
+    return this.request('/backgrounds');
+  }
+
   // === Analytics ===
 
   async getAnalytics(projectId: string, token: string): Promise<AnalyticsSummary> {

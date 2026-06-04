@@ -15,4 +15,6 @@ public interface MediaRepository extends JpaRepository<Media, UUID> {
     long countByProjectId(UUID projectId);
 
     Optional<Media> findByFileKey(String fileKey);
+
+    List<Media> findByFileKeyStartingWithOrderByUploadedAtDesc(String fileKeyPrefix);
 }
