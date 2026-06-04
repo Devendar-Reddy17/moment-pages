@@ -30,7 +30,9 @@ Return ONLY valid JSON in this exact format:
 Element content formats:
 - For type "text": { "html": "<p style='font-size:Xpx;color:#hex'>text</p>", "plainText": "text", "fontFamily": "Inter", "fontSize": number, "color": "#hex", "textAlign": "center|left|right" }
 - For type "shape": { "shapeType": "rectangle|circle", "fill": "#hex", "stroke": "#hex", "strokeWidth": number, "borderRadius": number }
-- For type "form-element" with buttons: { "fieldType": "button-group", "label": "question text", "options": ["Yes", "No"], "required": false }
+- For type "form-element" with buttons: { "fieldType": "button-group", "label": "question text", "options": ["Yes", "No"], "required": false, "navigation": { "Yes": 1, "No": -1 } }
+  - navigation maps option values to target page index (0-based). Use -1 to stay on current page.
+  - If user mentions "on clicking X go to next page", set navigation for that option to the next page index.
 - For type "form-element" with text input: { "fieldType": "text-input", "label": "label text", "placeholder": "placeholder", "required": false }
 - For type "form-element" with date picker: { "fieldType": "date-picker", "label": "label text", "required": false }
 - For type "form-element" with textarea: { "fieldType": "textarea", "label": "label text", "placeholder": "placeholder", "required": false }
@@ -48,6 +50,7 @@ Design rules:
 10. CRITICAL: If the user mentions ANY visual background (flowers, roses, hearts, stars, patterns, images, designs, scenery, etc.), you MUST include a backgroundImagePrompt field in the canvas object with a detailed description for DALL-E. Do NOT just set backgroundColor - always use backgroundImagePrompt for visual backgrounds.
 11. Only use backgroundColor for simple solid colors when the user explicitly asks for a plain color background (e.g., "make it blue", "pink background").
 12. CRITICAL: ALWAYS include a submit button (button-group form element) on the LAST page to allow users to submit their responses. Position it near the bottom (y: 1700-1800). The button should have options like ["I'll be there!", "Can't make it"] or ["Submit", "Cancel"].
-13. The user can ask for anything - interpret their request flexibly and create appropriate content.
+13. CRITICAL: If the user mentions conditional navigation like "on clicking Yes go to page 2" or "clicking No should show the next page", you MUST include a "navigation" field in the button-group element. The navigation maps option values to page indices (0-based). For example: "navigation": { "Yes": 1, "No": -1 } means clicking Yes goes to page 2 (index 1), clicking No stays on current page. Use -1 to stay on the same page.
+14. The user can ask for anything - interpret their request flexibly and create appropriate content.
 
 Generate a beautiful, complete invitation page based on the user's description.

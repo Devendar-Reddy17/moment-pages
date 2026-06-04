@@ -50,6 +50,7 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [scale, setScale] = useState(1);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { canvas } = canvasJson;
@@ -57,6 +58,7 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
     ? canvasJson.pages
     : [{ id: 'page-1', name: 'Page 1', elements: canvasJson.elements }];
 
+  const currentPage = pages[currentPageIndex];
   const allFormElements = pages.flatMap((p) => p.elements.filter((el) => el.type === 'form-element'));
   const hasForm = allFormElements.length > 0;
 
@@ -72,8 +74,11 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
     }
   );
 
-  const handleFieldChange = (fieldId: string, value: unknown) => {
+  const handleFieldChange = (fieldId: string, value: unknown, navigateTo?: number) => {
     setFormValues((prev) => ({ ...prev, [fieldId]: value }));
+    if (navigateTo !== undefined && navigateTo >= 0 && navigateTo < pages.length) {
+      setCurrentPageIndex(navigateTo);
+    }
   };
 
   const handleSubmit = async () => {
@@ -125,9 +130,9 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
 
   return (
     <div ref={containerRef} className="min-h-screen flex flex-col items-center bg-gray-100 py-4 gap-4">
-      {pages.map((page) => (
+      {currentPage && (
         <div
-          key={page.id}
+          key={currentPage.id}
           className="relative overflow-hidden mx-auto shadow-lg"
           style={{
             width: canvas.width * scale,
@@ -142,9 +147,9 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
             transformOrigin: 'top center',
           }}
         >
-          {renderPage(page.elements, formValues, handleFieldChange, page.id)}
+          {renderPage(currentPage.elements, formValues, handleFieldChange, currentPage.id)}
         </div>
-      ))}
+      )}
 
       {/* Submit button for form responses */}
       {hasForm && !submitted && (

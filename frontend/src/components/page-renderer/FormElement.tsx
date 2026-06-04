@@ -5,14 +5,14 @@ import type { CanvasElement, FormElementContent } from '@/types/editor';
 interface FormElementProps {
   element: CanvasElement;
   value: unknown;
-  onChange: (fieldId: string, value: unknown) => void;
+  onChange: (fieldId: string, value: unknown, navigateTo?: number) => void;
 }
 
 export function FormElement({ element, value, onChange }: FormElementProps) {
   const content = element.content as FormElementContent;
 
-  const handleChange = (newValue: unknown) => {
-    onChange(content.fieldId, newValue);
+  const handleChange = (newValue: unknown, navigateTo?: number) => {
+    onChange(content.fieldId, newValue, navigateTo);
   };
 
   switch (content.fieldType) {
@@ -29,7 +29,7 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
             {content.options?.map((option) => (
               <button
                 key={option}
-                onClick={() => handleChange(option)}
+                onClick={() => handleChange(option, content.navigation?.[option])}
                 className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition ${
                   value === option
                     ? 'bg-rose-500 text-white'

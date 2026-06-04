@@ -46,6 +46,8 @@ export interface FormElementContent {
   maxDate?: string;
   min?: number;
   max?: number;
+  // Navigation: map option value to target page index
+  navigation?: Record<string, number>;
 }
 
 export type ElementContent = TextContent | MediaContent | ShapeContent | FormElementContent;
