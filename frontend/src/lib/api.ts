@@ -25,7 +25,7 @@ import type {
 } from '@/types/project';
 import type { CanvasData } from '@/types/editor';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8089/api/v1';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v1';
 
 class ApiClient {
   private baseUrl: string;
