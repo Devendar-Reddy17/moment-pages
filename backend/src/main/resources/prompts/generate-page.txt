@@ -7,16 +7,22 @@ Return ONLY valid JSON in this exact format:
   "canvas": {
     "width": 1080,
     "height": 1920,
-    "backgroundColor": "#hex_color"
+    "backgroundColor": "#hex_color",
+    "backgroundImagePrompt": "Description for DALL-E background generation (optional)"
   },
-  "elements": [
+  "pages": [
     {
-      "type": "text|shape|form-element",
-      "x": number,
-      "y": number,
-      "width": number,
-      "height": number,
-      "content": { ... }
+      "name": "Page 1",
+      "elements": [
+        {
+          "type": "text|shape|form-element",
+          "x": number,
+          "y": number,
+          "width": number,
+          "height": number,
+          "content": { ... }
+        }
+      ]
     }
   ]
 }
@@ -30,14 +36,17 @@ Element content formats:
 - For type "form-element" with textarea: { "fieldType": "textarea", "label": "label text", "placeholder": "placeholder", "required": false }
 
 Design rules:
-1. Use beautiful, harmonious colors that match the theme
-2. Position elements vertically (invitation style, 1080x1920 portrait)
-3. Include a large title at the top (y: 100-200)
-4. Include a subtitle/description in the middle
-5. Include relevant form elements if the user mentions interactive components (buttons, date pickers, text fields)
-6. Use generous spacing between elements
-7. Keep text readable with good contrast against the background
-8. Make it visually appealing with a background shape or color
-9. Maximum 10 elements total to keep it clean
+1. Use beautiful, warm, inviting colors appropriate to the theme. NEVER use black backgrounds.
+2. If the user mentions multiple pages, page transitions, or content that should appear after an action (like clicking a button), create MULTIPLE pages. Distribute the content logically across pages.
+3. Position elements vertically (invitation style, 1080x1920 portrait)
+4. Include a large title at the top (y: 100-200)
+5. Include a subtitle/description in the middle
+6. Include relevant form elements if the user mentions interactive components (buttons, date pickers, text fields)
+7. Use generous spacing between elements
+8. Keep text readable with good contrast against the background
+9. Maximum 8 elements per page to keep it clean
+10. CRITICAL: If the user mentions ANY visual background (flowers, roses, hearts, stars, patterns, images, designs, scenery, etc.), you MUST include a backgroundImagePrompt field in the canvas object with a detailed description for DALL-E. Do NOT just set backgroundColor - always use backgroundImagePrompt for visual backgrounds.
+11. Only use backgroundColor for simple solid colors when the user explicitly asks for a plain color background (e.g., "make it blue", "pink background").
+12. The user can ask for anything - interpret their request flexibly and create appropriate content.
 
 Generate a beautiful, complete invitation page based on the user's description.

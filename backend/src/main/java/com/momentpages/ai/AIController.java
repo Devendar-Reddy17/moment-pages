@@ -74,4 +74,57 @@ public class AIController {
         AIPageResponse response = aiProvider.generatePage(request);
         return ResponseEntity.ok(response);
     }
+
+    public record EditCanvasRequestDTO(
+            @NotBlank String projectId,
+            @NotBlank String prompt,
+            @NotBlank String canvasState
+    ) {}
+
+    @PostMapping("/edit-canvas")
+    public ResponseEntity<AIEditResponse> editCanvas(
+            @RequestHeader("X-Management-Token") String token,
+            @Valid @RequestBody EditCanvasRequestDTO dto) {
+        projectService.validateManagementToken(UUID.fromString(dto.projectId()), token);
+
+        AIEditRequest request = new AIEditRequest(dto.prompt(), dto.canvasState());
+        AIEditResponse response = aiProvider.editCanvas(request);
+        return ResponseEntity.ok(response);
+    }
+
+    public record GenerateImageRequestDTO(
+            @NotBlank String prompt,
+            String projectId
+    ) {}
+
+    @PostMapping("/generate-image")
+    public ResponseEntity<AIImageResponse> generateImage(
+            @RequestHeader(value = "X-Management-Token", required = false) String token,
+            @Valid @RequestBody GenerateImageRequestDTO dto) {
+        // Image generation doesn't require project validation for now
+        UUID projectId = dto.projectId() != null && !dto.projectId().isBlank() 
+            ? UUID.fromString(dto.projectId()) 
+            : null;
+        AIImageRequest request = new AIImageRequest(dto.prompt(), projectId);
+        AIImageResponse response = aiProvider.generateImage(request);
+        return ResponseEntity.ok(response);
+    }
+
+    public record MoveTempImageRequestDTO(
+            @NotBlank String tempMediaId,
+            @NotBlank String projectId
+    ) {}
+
+    @PostMapping("/move-temp-image")
+    public ResponseEntity<AIImageResponse> moveTempImage(
+            @RequestHeader(value = "X-Management-Token", required = false) String token,
+            @Valid @RequestBody MoveTempImageRequestDTO dto) {
+        projectService.validateManagementToken(UUID.fromString(dto.projectId()), token);
+        
+        AIImageResponse response = aiProvider.moveTempImage(
+            UUID.fromString(dto.tempMediaId()),
+            UUID.fromString(dto.projectId())
+        );
+        return ResponseEntity.ok(response);
+    }
 }

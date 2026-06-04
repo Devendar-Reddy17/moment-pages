@@ -49,6 +49,12 @@ public class ProjectService {
     @Transactional
     public CreateProjectResponse createProject(CreateProjectRequest request) {
         Project project = new Project();
+        
+        // Use provided projectId if available, otherwise generate new one
+        if (request.projectId() != null) {
+            project.setId(request.projectId());
+        }
+        
         project.setEventType(request.eventType());
         project.setManagementToken(tokenGenerator.generateManagementToken());
 

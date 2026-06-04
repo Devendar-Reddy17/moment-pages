@@ -12,7 +12,7 @@ public class Media {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "project_id", nullable = false)
+    @Column(name = "project_id")
     private UUID projectId;
 
     @Column(name = "file_key", nullable = false, length = 512)
@@ -32,6 +32,9 @@ public class Media {
 
     @Column(name = "duration_secs")
     private Integer durationSecs;
+
+    @Column(name = "is_temp")
+    private Boolean isTemp = false;
 
     @Column(name = "uploaded_at", nullable = false, updatable = false)
     private Instant uploadedAt;
@@ -69,6 +72,9 @@ public class Media {
 
     public Integer getDurationSecs() { return durationSecs; }
     public void setDurationSecs(Integer durationSecs) { this.durationSecs = durationSecs; }
+
+    public Boolean getIsTemp() { return isTemp; }
+    public void setIsTemp(Boolean isTemp) { this.isTemp = isTemp; }
 
     public Instant getUploadedAt() { return uploadedAt; }
 }
