@@ -239,6 +239,23 @@ function fld(
   };
 }
 
+function btnGroup(
+  id: string, x: number, y: number, w: number, h: number,
+  opts: { z?: number } = {},
+): CanvasElement {
+  return {
+    id, type: 'form-element', x, y, width: w, height: h, rotation: 0,
+    zIndex: opts.z ?? 1, locked: false, opacity: 1,
+    content: {
+      fieldId: id,
+      fieldType: 'button-group',
+      label: 'Will you attend?',
+      options: ["I'll be there!", "Can't make it"],
+      required: false,
+    },
+  };
+}
+
 function nl2br(text: string): string {
   return text.replace(/\n/g, '<br/>');
 }
@@ -565,6 +582,12 @@ export function buildCanvasFromLayout(
       elements: buildGalleryPage(layout, content, 3),
     });
   }
+
+  // Add submit button to last page
+  const lastPage = pages[pages.length - 1];
+  lastPage.elements.push(
+    btnGroup('submit-btn', 140, 1750, 800, 80, { z: 100 })
+  );
 
   return {
     version: 1,

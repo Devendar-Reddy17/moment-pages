@@ -47,6 +47,7 @@ Design rules:
 9. Maximum 8 elements per page to keep it clean
 10. CRITICAL: If the user mentions ANY visual background (flowers, roses, hearts, stars, patterns, images, designs, scenery, etc.), you MUST include a backgroundImagePrompt field in the canvas object with a detailed description for DALL-E. Do NOT just set backgroundColor - always use backgroundImagePrompt for visual backgrounds.
 11. Only use backgroundColor for simple solid colors when the user explicitly asks for a plain color background (e.g., "make it blue", "pink background").
-12. The user can ask for anything - interpret their request flexibly and create appropriate content.
+12. CRITICAL: ALWAYS include a submit button (button-group form element) on the LAST page to allow users to submit their responses. Position it near the bottom (y: 1700-1800). The button should have options like ["I'll be there!", "Can't make it"] or ["Submit", "Cancel"].
+13. The user can ask for anything - interpret their request flexibly and create appropriate content.
 
 Generate a beautiful, complete invitation page based on the user's description.
