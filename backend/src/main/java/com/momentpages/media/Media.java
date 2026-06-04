@@ -36,6 +36,9 @@ public class Media {
     @Column(name = "is_temp")
     private Boolean isTemp = false;
 
+    @Column(name = "tags", length = 500)
+    private String tags;
+
     @Column(name = "uploaded_at", nullable = false, updatable = false)
     private Instant uploadedAt;
 
@@ -75,6 +78,9 @@ public class Media {
 
     public Boolean getIsTemp() { return isTemp; }
     public void setIsTemp(Boolean isTemp) { this.isTemp = isTemp; }
+
+    public String getTags() { return tags; }
+    public void setTags(String tags) { this.tags = tags; }
 
     public Instant getUploadedAt() { return uploadedAt; }
 }

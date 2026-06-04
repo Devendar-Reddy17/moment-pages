@@ -17,8 +17,8 @@ public class BackgroundController {
     }
 
     @GetMapping
-    public ResponseEntity<?> listBackgrounds() {
-        List<Media> backgrounds = mediaService.listSharedBackgrounds();
+    public ResponseEntity<?> listBackgrounds(@RequestParam(required = false) String search) {
+        List<Media> backgrounds = mediaService.listSharedBackgrounds(search);
         var response = backgrounds.stream()
                 .filter(m -> m.getMimeType() != null && m.getMimeType().startsWith("image/"))
                 .map(m -> Map.of(

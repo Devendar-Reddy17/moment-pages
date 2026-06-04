@@ -297,8 +297,9 @@ class ApiClient {
     );
   }
 
-  async getBackgrounds(): Promise<Array<{ id: string; fileName: string; publicUrl: string }>> {
-    return this.request('/backgrounds');
+  async getBackgrounds(search?: string): Promise<Array<{ id: string; fileName: string; publicUrl: string }>> {
+    const query = search ? `?search=${encodeURIComponent(search)}` : '';
+    return this.request(`/backgrounds${query}`);
   }
 
   // === Analytics ===

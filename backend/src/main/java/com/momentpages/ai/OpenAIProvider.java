@@ -252,6 +252,7 @@ public class OpenAIProvider implements AIProvider {
             media.setFileName(fileName);
             media.setMimeType("image/png");
             media.setFileSize(imageBytes.length);
+            media.setTags(request.prompt()); // Save prompt as tags for search
             mediaRepository.save(media);
 
             String imageUrl = backendUrl + "/api/v1/media/" + fileKey;

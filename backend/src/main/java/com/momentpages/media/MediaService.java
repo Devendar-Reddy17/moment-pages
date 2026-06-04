@@ -140,8 +140,17 @@ public class MediaService {
         return mediaRepository.findByProjectIdOrderByUploadedAtDesc(projectId);
     }
 
-    public List<Media> listSharedBackgrounds() {
-        return mediaRepository.findByFileKeyStartingWithOrderByUploadedAtDesc("ai-generated/shared/");
+    public List<Media> listSharedBackgrounds(String search) {
+        List<Media> backgrounds = mediaRepository.findByFileKeyStartingWithOrderByUploadedAtDesc("ai-generated/shared/");
+        
+        if (search != null && !search.isBlank()) {
+            String searchLower = search.toLowerCase();
+            return backgrounds.stream()
+                    .filter(m -> m.getTags() != null && m.getTags().toLowerCase().contains(searchLower))
+                    .toList();
+        }
+        
+        return backgrounds;
     }
 
     public void deleteMedia(UUID projectId, UUID mediaId) {

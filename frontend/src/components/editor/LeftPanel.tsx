@@ -51,14 +51,10 @@ export function LeftPanel() {
   const [gifSearch, setGifSearch] = useState('');
   const [emojiSearch, setEmojiSearch] = useState('');
 
-  // Load backgrounds on mount
+  // Load backgrounds on mount and when search changes
   useEffect(() => {
-    api.getBackgrounds().then(setBackgrounds).catch(console.error);
-  }, []);
-
-  const filteredBackgrounds = backgrounds.filter(b =>
-    b.fileName.toLowerCase().includes(backgroundSearch.toLowerCase())
-  );
+    api.getBackgrounds(backgroundSearch || undefined).then(setBackgrounds).catch(console.error);
+  }, [backgroundSearch]);
 
   const handleFileUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -290,7 +286,7 @@ export function LeftPanel() {
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {filteredBackgrounds.map((bg) => (
+                {backgrounds.map((bg) => (
                   <button
                     key={bg.id}
                     onClick={() => handleBackgroundSelect(bg.publicUrl)}
@@ -307,7 +303,7 @@ export function LeftPanel() {
                   </button>
                 ))}
               </div>
-              {filteredBackgrounds.length === 0 && (
+              {backgrounds.length === 0 && (
                 <p className="text-xs text-gray-500 text-center py-4">No backgrounds found</p>
               )}
             </div>
