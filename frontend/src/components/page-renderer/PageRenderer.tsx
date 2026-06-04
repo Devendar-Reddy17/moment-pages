@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { CanvasData, CanvasElement } from '@/types/editor';
 import { TextElement } from './TextElement';
 import { ImageElement } from './ImageElement';
@@ -49,6 +49,7 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
   const [formValues, setFormValues] = useState<Record<string, unknown>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [scale, setScale] = useState(1);
 
   const { canvas } = canvasJson;
   const pages = canvasJson.pages && canvasJson.pages.length > 0
@@ -85,10 +86,25 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
     }
   };
 
-  // Scale canvas to fit viewport
-  const scale = typeof window !== 'undefined'
-    ? Math.min(1, window.innerWidth / canvas.width)
-    : 1;
+  // Calculate scale based on window size
+  const calculateScale = () => {
+    if (typeof window === 'undefined') return 1;
+    const padding = 32; // py-4 = 16px * 2
+    const availableWidth = window.innerWidth - padding;
+    return Math.min(1, availableWidth / canvas.width);
+  };
+
+  // Update scale on mount and window resize
+  useEffect(() => {
+    setScale(calculateScale());
+
+    const handleResize = () => {
+      setScale(calculateScale());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [canvas.width]);
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100 py-4 gap-4">

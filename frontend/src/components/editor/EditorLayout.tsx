@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { Toolbar } from './Toolbar';
 import { LeftPanel } from './LeftPanel';
@@ -21,6 +21,38 @@ export function EditorLayout() {
 
   const { undo, redo, deleteElement, duplicateElement, selectedElementId, previewMode, getCanvasData, loadCanvas } = useEditorStore();
   const { setProject, setManagementToken } = useProjectStore();
+  const [previewContainerWidth, setPreviewContainerWidth] = useState(1080);
+  const previewContainerRef = useRef<HTMLDivElement>(null);
+
+  // Calculate dynamic preview width based on container
+  useEffect(() => {
+    if (!previewMode || !previewContainerRef.current) return;
+
+    const updateWidth = () => {
+      if (previewContainerRef.current) {
+        const containerWidth = previewContainerRef.current.clientWidth;
+        const padding = 64; // py-8 = 32px * 2
+        const availableWidth = containerWidth - padding;
+        
+        if (previewMode === 'mobile') {
+          // Mobile: max 375px, but scale down if needed
+          setPreviewContainerWidth(Math.min(375, availableWidth));
+        } else {
+          // Desktop: use available width, max 1080px
+          setPreviewContainerWidth(Math.min(1080, availableWidth));
+        }
+      }
+    };
+
+    updateWidth();
+
+    const resizeObserver = new ResizeObserver(updateWidth);
+    if (previewContainerRef.current) {
+      resizeObserver.observe(previewContainerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, [previewMode]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -82,7 +114,6 @@ export function EditorLayout() {
   }, [projectId, setProject, setManagementToken, loadCanvas]);
 
   const isPreview = previewMode !== null;
-  const previewWidth = previewMode === 'mobile' ? 375 : 1080;
 
   const handleAIGenerate = async (prompt: string) => {
     const token = projectId ? sessionStorage.getItem(`mp_token_${projectId}`) : null;
@@ -275,13 +306,13 @@ export function EditorLayout() {
 
         {/* Canvas Area */}
         <div className={`flex-1 relative overflow-hidden flex flex-col ${isPreview ? 'bg-gray-800' : ''}`}>
-          <div className="flex-1 flex items-center justify-center overflow-hidden">
+          <div ref={previewContainerRef} className="flex-1 flex items-center justify-center overflow-hidden">
             {isPreview ? (
               <div className="h-full overflow-auto py-8">
                 <div
                   className="mx-auto shadow-2xl"
                   style={{
-                    width: previewWidth,
+                    width: previewContainerWidth,
                     maxWidth: '100%',
                   }}
                 >
