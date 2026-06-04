@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { CanvasData, CanvasElement } from '@/types/editor';
 import { TextElement } from './TextElement';
 import { ImageElement } from './ImageElement';
@@ -50,6 +50,7 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [scale, setScale] = useState(1);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { canvas } = canvasJson;
   const pages = canvasJson.pages && canvasJson.pages.length > 0
@@ -58,6 +59,18 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
 
   const allFormElements = pages.flatMap((p) => p.elements.filter((el) => el.type === 'form-element'));
   const hasForm = allFormElements.length > 0;
+
+  // Check if all required fields are filled
+  const requiredFields = allFormElements.filter(
+    (el) => (el.content as { required?: boolean }).required === true
+  );
+  const isFormValid = requiredFields.every(
+    (el) => {
+      const fc = el.content as { fieldId: string };
+      const value = formValues[fc.fieldId];
+      return value !== undefined && value !== null && value !== '';
+    }
+  );
 
   const handleFieldChange = (fieldId: string, value: unknown) => {
     setFormValues((prev) => ({ ...prev, [fieldId]: value }));
@@ -86,28 +99,32 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
     }
   };
 
-  // Calculate scale based on window size
+  // Calculate scale based on container size
   const calculateScale = () => {
-    if (typeof window === 'undefined') return 1;
+    if (!containerRef.current) return 1;
+    const containerWidth = containerRef.current.clientWidth;
     const padding = 32; // py-4 = 16px * 2
-    const availableWidth = window.innerWidth - padding;
+    const availableWidth = containerWidth - padding;
     return Math.min(1, availableWidth / canvas.width);
   };
 
-  // Update scale on mount and window resize
+  // Update scale on mount and container resize
   useEffect(() => {
     setScale(calculateScale());
 
-    const handleResize = () => {
+    const resizeObserver = new ResizeObserver(() => {
       setScale(calculateScale());
-    };
+    });
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
   }, [canvas.width]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100 py-4 gap-4">
+    <div ref={containerRef} className="min-h-screen flex flex-col items-center bg-gray-100 py-4 gap-4">
       {pages.map((page) => (
         <div
           key={page.id}
@@ -134,11 +151,16 @@ export function PageRenderer({ canvasJson, slug }: PageRendererProps) {
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
           <button
             onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="px-8 py-3 bg-rose-500 text-white rounded-full font-medium shadow-lg hover:bg-rose-600 transition disabled:opacity-50"
+            disabled={isSubmitting || !isFormValid}
+            className="px-8 py-3 bg-rose-500 text-white rounded-full font-medium shadow-lg hover:bg-rose-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Sending...' : 'Submit Response'}
           </button>
+          {!isFormValid && (
+            <p className="text-xs text-gray-500 text-center mt-2">
+              Please fill in all required fields
+            </p>
+          )}
         </div>
       )}
 

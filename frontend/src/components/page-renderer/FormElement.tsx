@@ -20,7 +20,10 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
       return (
         <div className="w-full h-full flex flex-col gap-1">
           {content.label && (
-            <label className="text-sm font-medium text-gray-700">{content.label}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {content.label}
+              {content.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
           )}
           <div className="flex gap-2">
             {content.options?.map((option) => (
@@ -44,7 +47,10 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
       return (
         <div className="w-full h-full flex flex-col gap-1">
           {content.label && (
-            <label className="text-sm font-medium text-gray-700">{content.label}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {content.label}
+              {content.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
           )}
           <input
             type="text"
@@ -60,7 +66,10 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
       return (
         <div className="w-full h-full flex flex-col gap-1">
           {content.label && (
-            <label className="text-sm font-medium text-gray-700">{content.label}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {content.label}
+              {content.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
           )}
           <textarea
             placeholder={content.placeholder || ''}
@@ -75,7 +84,10 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
       return (
         <div className="w-full h-full flex flex-col gap-1">
           {content.label && (
-            <label className="text-sm font-medium text-gray-700">{content.label}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {content.label}
+              {content.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
           )}
           <input
             type="date"
@@ -92,7 +104,10 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
       return (
         <div className="w-full h-full flex flex-col gap-1">
           {content.label && (
-            <label className="text-sm font-medium text-gray-700">{content.label}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {content.label}
+              {content.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
           )}
           <input
             type="time"
@@ -107,7 +122,10 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
       return (
         <div className="w-full h-full flex flex-col gap-1">
           {content.label && (
-            <label className="text-sm font-medium text-gray-700">{content.label}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {content.label}
+              {content.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
           )}
           <select
             value={(value as string) || ''}
@@ -128,7 +146,10 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
       return (
         <div className="w-full h-full flex flex-col gap-1">
           {content.label && (
-            <label className="text-sm font-medium text-gray-700">{content.label}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {content.label}
+              {content.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
           )}
           <div className="flex flex-col gap-1">
             {content.options?.map((option) => (
@@ -152,7 +173,10 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
       return (
         <div className="w-full h-full flex flex-col gap-1">
           {content.label && (
-            <label className="text-sm font-medium text-gray-700">{content.label}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {content.label}
+              {content.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
           )}
           <div className="flex flex-col gap-1">
             {content.options?.map((option) => (
@@ -181,7 +205,10 @@ export function FormElement({ element, value, onChange }: FormElementProps) {
       return (
         <div className="w-full h-full flex flex-col gap-1">
           {content.label && (
-            <label className="text-sm font-medium text-gray-700">{content.label}</label>
+            <label className="text-sm font-medium text-gray-700">
+              {content.label}
+              {content.required && <span className="text-red-500 ml-1">*</span>}
+            </label>
           )}
           <input
             type="number"
