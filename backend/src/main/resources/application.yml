@@ -34,13 +34,13 @@ spring:
       max-request-size: 100MB
 
 server:
-  port: ${BACKEND_PORT:8089}
+  port: ${BACKEND_PORT:8080}
 
 # Application Config
 app:
   domain: ${APP_DOMAIN:momentpages.com}
   frontend-url: ${NEXT_PUBLIC_APP_URL:http://localhost:3000}
-  backend-url: ${BACKEND_URL:http://localhost:8089}
+  backend-url: ${BACKEND_URL:http://localhost:8080}
   management-token-length: ${MANAGEMENT_TOKEN_LENGTH:64}
   cors:
     allowed-origins: "${NEXT_PUBLIC_APP_URL:http://localhost:3000},https://momentpages.com,https://*.momentpages.com"

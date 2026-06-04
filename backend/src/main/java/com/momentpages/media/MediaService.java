@@ -43,7 +43,7 @@ public class MediaService {
     @Value("${r2.upload-expiry-minutes}")
     private int uploadExpiryMinutes;
 
-    @Value("${app.backend-url:http://localhost:8089}")
+    @Value("${app.backend-url:http://localhost:8080}")
     private String backendUrl;
 
     public MediaService(MediaRepository mediaRepository, S3Client s3Client, S3Presigner s3Presigner) {
